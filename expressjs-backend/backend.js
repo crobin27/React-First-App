@@ -75,9 +75,8 @@ app.post('/users', (req, res) => {
    const userToAdd = req.body;
    //this generates an id between 100000-99999
    userToAdd.id = parseInt(Math.random() * (999999 - 100000) + 100000).toString();
-   console.log(req.body);
    addUser(userToAdd);
-   res.status(201).end();
+   res.status(201).send(userToAdd).end();
 })
 
 function addUser(user){
@@ -88,7 +87,7 @@ app.delete('/users/:id', (req, res) => {
    const id = req.params['id'];
    const flag = deleteUser(id);
    if (flag == 1){
-      res.status(200).end();
+      res.status(204).end();
    }
    else{
       res.status(404).send('Resource not found');

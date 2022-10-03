@@ -14,12 +14,18 @@ function MyApp() {
             return i !== index
         });
         setCharacters(updated);
+        const idUrl = 'http://localhost:5000/users/' + characters[index].id;
+        makeDeleteCall(idUrl);
+
     }
 
     function updateList(person) {
         makePostCall(person).then( result => {
-            if(result && result.status === 201)
-                setCharacters([...characters, person]);
+            if(result && result.status === 201) {
+                const userToAdd = person;
+                userToAdd.id = result.data.id;
+                setCharacters([...characters, userToAdd]);
+            }
         });
     }
 
@@ -52,6 +58,18 @@ function MyApp() {
      async function makePostCall(person){
         try {
             const response = await axios.post('http://localhost:5000/users', person);
+            return response;
+        }
+        catch (error) {
+            console.log(error);
+            return false;
+        }
+     }
+
+     async function makeDeleteCall(urlWithId){
+        try {
+            //send a delete request of form http://localhost/5000/xyz567
+            const response = await axios.delete(urlWithId);
             return response;
         }
         catch (error) {
