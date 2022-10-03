@@ -73,8 +73,11 @@ app.listen(port, () => {
 
 app.post('/users', (req, res) => {
    const userToAdd = req.body;
+   //this generates an id between 100000-99999
+   userToAdd.id = parseInt(Math.random() * (999999 - 100000) + 100000).toString();
+   console.log(req.body);
    addUser(userToAdd);
-   res.status(200).end();
+   res.status(201).end();
 })
 
 function addUser(user){
