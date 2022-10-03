@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const port = 5000;
 
+
+
+const cors = require('cors');
+app.use(cors());
 app.use(express.json());
 
 //create a '/' get function
@@ -12,8 +16,19 @@ app.get('/', (req, res) => {
 //create a get function for /users
 app.get('/users', (req, res) => {
    const name = req.query.name;
-   if (name != undefined){
+   const job = req.query.job;
+   if (name != undefined & job != undefined){
+      let result = findUserByNameAndJob(name, job);
+      result = {user_list: result};
+      res.send(result);
+   }
+   else if (name != undefined){
       let result = findUserByName(name);
+      result = {user_list: result};
+      res.send(result);
+   }
+   else if (job != undefined){
+      let result = findUserByJob(job);
       result = {user_list: result};
       res.send(result);
    }
@@ -21,6 +36,16 @@ app.get('/users', (req, res) => {
     res.send(users);
    }
 });
+
+
+const findUserByNameAndJob = (name, job) => {
+   test = users['users_list'].filter( (user) => user['job'] === job);
+   test = test.filter( (user) => user['name'] === name);
+   return test;
+}
+const findUserByJob = (job) => {
+   return users['users_list'].filter( (user) => user['job'] === job);
+}
 
 const findUserByName = (name) => {
    return users['users_list'].filter( (user) => user['name'] === name);
@@ -56,22 +81,29 @@ function addUser(user){
    users['users_list'].push(user);
 }
 
-app.delete('/users', (req, res) => {
+app.delete('/users/:id', (req, res) => {
    const id = req.params['id'];
-   let result = findUserById(id);
-   if (result === undefined || result.length == 0)
-      res.status(404).send('Resource not found');
-   else {
-      deleteUser(id);
+   const flag = deleteUser(id);
+   if (flag == 1){
       res.status(200).end();
+   }
+   else{
+      res.status(404).send('Resource not found');
    }
 })
 
 function deleteUser(id){
-   index = users['users_list'].indexOf(id);
+   index = users['users_list'].findIndex(value => {
+      return value.id === String(id);
+   });
+   if(index === -1){
+      return -1;
+   }
+   else {
    users['users_list'].splice(index, 1);
+   return 1;
+   }
 }
-
 
 const users = { 
     users_list :
