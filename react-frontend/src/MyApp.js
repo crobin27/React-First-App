@@ -29,13 +29,6 @@ function MyApp() {
         });
     }
 
-    return (
-        <div className="container">
-            <Table characterData={characters} removeCharacter={removeOneCharacter} />
-            <Form handleSubmit={updateList} />
-        </div>
-    );
-
     async function fetchAll(){
         try {
            const response = await axios.get('http://localhost:5000/users');
@@ -78,9 +71,12 @@ function MyApp() {
         }
      }
 
-    
-    
-     
+     return (
+        <div className="container">
+            <Table characterData={characters} removeCharacter={removeOneCharacter} />
+            <Form handleSubmit={updateList} />
+        </div>
+    );
 }
 
 export default MyApp;
