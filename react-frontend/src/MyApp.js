@@ -14,7 +14,7 @@ function MyApp() {
             return i !== index
         });
         setCharacters(updated);
-        const idUrl = 'http://localhost:5000/users/' + characters[index].id;
+        const idUrl = 'http://localhost:5000/users/' + characters[index]._id;
         makeDeleteCall(idUrl);
 
     }
